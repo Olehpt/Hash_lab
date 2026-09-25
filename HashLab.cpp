@@ -8,7 +8,8 @@ int main()
 {
 	//generateRandomOperations(100, "_operations.txt");
 	//generateRows(1000000, "_rows.txt");
-	Hash hash_table("_rows.txt");
+	HashTable hash_table("_rows.txt");
 	hash_table.applyOperations("_operations.txt");
 	hash_table.info();
+	hash_table.usePalindrome();
 }

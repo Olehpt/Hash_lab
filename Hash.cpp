@@ -4,13 +4,14 @@
 #include <iostream>
 #include <chrono>
 #include "Operation.h"
+#include "Palindrome.h"
 
-Hash::Hash() {
+HashTable::HashTable() {
 	table = std::vector<Row>(TABLE_SIZE, Row("", RowType::EMPTY));
 	size = 0;
 }
 
-Hash::Hash(const std::string& filepath) {
+HashTable::HashTable(const std::string& filepath) {
 	table = std::vector<Row>(TABLE_SIZE, Row("", RowType::EMPTY));
 	size = 0;
 	std::ifstream file(filepath);
@@ -38,12 +39,12 @@ Hash::Hash(const std::string& filepath) {
 size_t HashFunc(const std::string& str) {
 	size_t hash = 0;
 	for (char c : str) {
-		hash = (hash * Hash::P + c) % Hash::TABLE_SIZE;
+		hash = (hash * HashTable::P + c) % HashTable::TABLE_SIZE;
 	}
 	return hash;
 }
 
-bool Hash::find(const std::string& value, size_t &hash) {
+bool HashTable::find(const std::string& value, size_t &hash) {
 	hash = HashFunc(value);
 	Row r = table[hash];
 	while (r.type != RowType::EMPTY) {
@@ -56,7 +57,7 @@ bool Hash::find(const std::string& value, size_t &hash) {
 	return 0;
 }
 
-bool Hash::add(const std::string& value) {
+bool HashTable::add(const std::string& value) {
 	size_t hash = 0;
 	if (find(value, hash)) return 1;
 	hash = HashFunc(value);
@@ -70,7 +71,7 @@ bool Hash::add(const std::string& value) {
 	return 1;
 }
 
-bool Hash::remove(const std::string& value) {
+bool HashTable::remove(const std::string& value) {
 	size_t hash = 0;
 	if (!find(value, hash)) return 1;
 	//hash = HashFunc(value);
@@ -79,12 +80,12 @@ bool Hash::remove(const std::string& value) {
 	return 1;
 }
 
-void Hash::info() {
+void HashTable::info() {
 	std::cout << "Hash table capacity: " << TABLE_SIZE << std::endl;
 	std::cout << "Hash table acutal size: " << size << std::endl;
 }
 
-void Hash::applyOperations(const std::string& filepath) {
+void HashTable::applyOperations(const std::string& filepath) {
 	std::ifstream file(filepath);
 	if (!file) {
 		std::cerr << "Error opening file: " << filepath << std::endl;
@@ -103,4 +104,22 @@ void Hash::applyOperations(const std::string& filepath) {
 			bool found = find(str_value, hash);
 		}
 	}
+}
+
+void HashTable::usePalindrome() {
+	size_t counter = 0;
+	//
+	auto start = std::chrono::high_resolution_clock::now();
+	//
+	for (auto r : table) {
+		if (r.type == RowType::OCCUPIED && palindrome(r.value)) {
+			counter++;
+		}
+	}
+	//
+	auto end = std::chrono::high_resolution_clock::now();
+	//
+	double seconds = std::chrono::duration<double>(end - start).count();
+	std::cout << "Found all palindromes in hash table: " << counter << "\n";
+	std::cout << "Time taken: " << seconds << " seconds\n";
 }

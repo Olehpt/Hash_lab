@@ -130,11 +130,13 @@
     <ClCompile Include="Hash.cpp" />
     <ClCompile Include="HashLab.cpp" />
     <ClCompile Include="Operation.cpp" />
+    <ClCompile Include="Palindrome.cpp" />
     <ClCompile Include="Row.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hash.h" />
     <ClInclude Include="Operation.h" />
+    <ClInclude Include="Palindrome.h" />
     <ClInclude Include="Row.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
